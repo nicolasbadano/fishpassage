@@ -1,0 +1,11 @@
+processor*
+0
+*.msh
+Anim
+log
+polyMesh
+dynamicCode
+*.exe
+extendedFeatureEdgeMesh
+postProcessing
+linux64GccDPInt32Opt
