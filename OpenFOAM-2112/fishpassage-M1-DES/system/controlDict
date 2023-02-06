@@ -1,0 +1,229 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  8
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     interFoam;
+
+startFrom       latestTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         60;
+
+deltaT          0.001;
+
+writeControl    adjustableRunTime;
+
+writeInterval   2;
+
+purgeWrite      0;
+
+writeFormat     binary;
+
+writePrecision  12;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   12;
+
+runTimeModifiable yes;
+
+adjustTimeStep  on;
+
+maxCo           0.5;
+maxAlphaCo      0.5;
+
+maxDeltaT       0.01;
+
+libs            ("libvariableHeightFlowRateInletUniformVelocity.so");
+
+functions
+{
+    yPlus1
+    {
+        type            yPlus;
+        libs            ("libfieldFunctionObjects.so");
+        writeControl    writeTime;
+        writeInterval   1;
+    }
+    CourantNo1
+    {
+        type            CourantNo;
+        libs            ("libfieldFunctionObjects.so");
+        writeControl    writeTime;
+        writeInterval   1;
+    }
+    outlet
+    {
+        type            surfaceFieldValue;
+        libs            ("libfieldFunctionObjects.so");
+        writeControl    timeStep;
+        writeInterval   1;
+        writeFields     false;
+        log             false;
+        regionType      patch;
+        name            outlet;
+        operation       sum;
+        fields
+        (
+            alphaPhi0.water
+        );
+    }
+
+
+    surfaceSampling
+    {
+        type            surfaces;
+        libs            (sampling);
+        writeControl    runTime;
+        writeInterval   0.05;
+
+        interpolationScheme cellPointWallModified;
+
+        surfaceFormat ensight;
+
+        formatOptions
+        {
+            vtp
+            {
+                format binary;
+            }
+        }
+
+        // Fields to be sampled
+        fields
+        (
+            U
+            k
+            omega
+            nut
+            alpha.water
+            p_rgh
+        );
+
+        surfaces
+        {
+            freeSurface
+            {
+                type            isoSurface;
+                isoField        alpha.water;
+                isoValue        0.5;
+                interpolate     true;
+            }
+            yNormal
+            {
+                type        cuttingPlane;
+                planeType   pointAndNormal;
+                pointAndNormalDict {
+                    point       (0 1 0);
+                    normal      (0 1 0);
+                }
+                interpolate true;
+            }    
+            yNormal
+            {
+                type        cuttingPlane;
+                planeType   pointAndNormal;
+                pointAndNormalDict {
+                    point       (0 0.6 0);
+                    normal      (0 1 0);
+                }
+                interpolate true;
+            }                        
+            zNormalL
+            {
+                type        cuttingPlane;
+                planeType   pointAndNormal;
+                pointAndNormalDict {
+                    point       (0 0 -3.2);
+                    normal      (0 0 1);
+                }
+                interpolate true;
+            }
+            zNormalR
+            {
+                type        cuttingPlane;
+                planeType   pointAndNormal;
+                pointAndNormalDict {
+                    point       (0 0 3.2);
+                    normal      (0 0 1);
+                }
+                interpolate true;
+            }            
+        }
+    }
+
+    fieldAverage1
+    {
+        type            fieldAverage;
+        libs            ("libfieldFunctionObjects.so");
+        writeControl    writeTime;
+        restartOnRestart    no;
+        restartOnOutput     no;
+        timeStart             40;
+        timeEnd               60;
+        fields
+        (
+            U
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+            }
+
+            alpha.water
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+            }
+
+            p_rgh
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+            }
+
+            k
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+            }
+
+            omega
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+            }
+
+            nut
+            {
+                mean        on;
+                prime2Mean  off;
+                base        time;
+            }
+        );
+    }
+}
+
+// ************************************************************************* //
