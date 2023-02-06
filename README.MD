@@ -4,7 +4,7 @@ This repository contains the implementation of an OpenFOAM model for the case of
 
 The model has a couple of interesting features, that apply to other cases:
 - A fixed water level boundary condition in the downstream boundary, which is achieved by fixing the pressure (`p_rgh`) in all the wet faces.
-- The air velocities attenuation technique explained in this repository: (https://github.com/nicolasbadano/airVelocityAttenuation)[https://github.com/nicolasbadano/airVelocityAttenuation]
+- The air velocities attenuation technique explained in this repository: [github.com/nicolasbadano/airVelocityAttenuation](https://github.com/nicolasbadano/airVelocityAttenuation)
 
 ## Getting Started
 
@@ -13,7 +13,7 @@ The model has a couple of interesting features, that apply to other cases:
 
 ## Results
 
-[![Watch the video](https://img.youtube.com/vi/ytWlFbu8u-I/default.jpg)](https://youtu.be/ytWlFbu8u-I)
+[![Watch the video](https://img.youtube.com/vi/ytWlFbu8u-I/maxresdefault.jpg)](https://youtu.be/ytWlFbu8u-I)
 
 ## License
 
